@@ -1,0 +1,20 @@
+[toolchain]
+
+[features]
+seeds = false
+skip-lint = false
+
+[programs.localnet]
+amm = "8QNTeqVq25xDKycxbcyKQPXQShcGLhatWwiZ6MqJQ1we"
+
+[registry]
+url = "https://api.apr.dev"
+
+[provider]
+cluster = "Localnet"
+wallet = "/Users/trankhacvy/.config/solana/id.json"
+
+[scripts]
+# test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/create-amm.ts"
+# test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/create-pool.ts"
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/deposit-liquidity.ts"
