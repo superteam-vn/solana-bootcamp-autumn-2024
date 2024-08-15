@@ -10,4 +10,4 @@
 
 - Begin your work using the code found in the `/week-3/code` folder.
 - Ensure all the assignment code resides in the `/week-3/assignment` directory. The final submission deadline is `22/08/2024`.
-  Once completed, open a GitHub issue in your forked repository titled `Submission for Assignment 3`. Don't forget to include the signatures of your executed transactions run on devnet in the description.
+  Once completed, open a GitHub issue in your forked repository titled `Submission for Assignment 3`. Don't forget to include the signatures of your executed transactions run on devnet in the description. Then, enter your submission information into this form https://forms.gle/BHsyb3889CmWn6Nc6.
