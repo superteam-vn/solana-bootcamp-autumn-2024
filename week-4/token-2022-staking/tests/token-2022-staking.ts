@@ -1,6 +1,6 @@
 import { Token2022Staking } from "./../target/types/token_2022_staking";
 import * as anchor from "@coral-xyz/anchor";
-import { Program } from "@coral-xyz/anchor";
+import { AnchorError, Program } from "@coral-xyz/anchor";
 
 import {
   createAssociatedTokenAccountInstruction,
@@ -33,25 +33,31 @@ describe("token-2022-staking", () => {
   const program = anchor.workspace
     .Token2022Staking as Program<Token2022Staking>;
 
+  // get address of config account
   const [config] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("config")],
     program.programId
   );
-  const rewardMintKeypair = anchor.web3.Keypair.generate();
 
+  // create a new mint for reward token
+  const rewardMintKeypair = anchor.web3.Keypair.generate();
+  // create a new mint for stake token
   const stakeMintKeypair = anchor.web3.Keypair.generate();
 
   const metadata: TokenMetadata = {
     mint: stakeMintKeypair.publicKey,
     name: "STAKE TOKEN",
     symbol: "BCST",
-    uri: "https://raw.githubusercontent.com/HongThaiPham/summer-bootcamp-anchor-token2022-stake/main/app/assets/token-info.json",
+    uri: "https://raw.githubusercontent.com/HongThaiPham/solana-bootcamp-autumn-2024/main/week-4/token-2022-staking/app/assets/token-info.json",
     additionalMetadata: [],
   };
+
+  // create staker account
   const staker = anchor.web3.Keypair.generate();
-  console.log("Staker: ", staker.publicKey.toBase58());
+  console.log("Staker address: ", staker.publicKey.toBase58());
   const rewardPerSlot = new anchor.BN(1_000_000_000);
 
+  // get associated token account of staker for stake token
   const stakerTokenAccount = getAssociatedTokenAddressSync(
     stakeMintKeypair.publicKey,
     staker.publicKey,
@@ -59,16 +65,19 @@ describe("token-2022-staking", () => {
     TOKEN_2022_PROGRAM_ID
   );
 
+  // get pool address from stake token
   const [pool] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("pool"), stakeMintKeypair.publicKey.toBuffer()],
     program.programId
   );
 
+  // get stake info address from pool and staker
   const [stakeInfo] = anchor.web3.PublicKey.findProgramAddressSync(
     [Buffer.from("stakeinfo"), pool.toBuffer(), staker.publicKey.toBuffer()],
     program.programId
   );
 
+  // get associated token account of stake token for stake_info account
   const stakeInfoAta = getAssociatedTokenAddressSync(
     stakeMintKeypair.publicKey,
     stakeInfo,
@@ -76,6 +85,7 @@ describe("token-2022-staking", () => {
     TOKEN_2022_PROGRAM_ID
   );
 
+  // get associated token account of reward token for pool account
   const rewardAta = getAssociatedTokenAddressSync(
     rewardMintKeypair.publicKey,
     pool,
@@ -97,8 +107,6 @@ describe("token-2022-staking", () => {
         ...(await provider.connection.getLatestBlockhash()),
       });
     }
-
-    // delay for airdrop
 
     {
       // create stake mint token
@@ -169,7 +177,6 @@ describe("token-2022-staking", () => {
   });
 
   it("Is configured", async () => {
-    // Add your test here.
     const tx = await program.methods
       .initialize()
       .accountsPartial({
@@ -322,6 +329,9 @@ describe("token-2022-staking", () => {
       await program.account.stakeInfo.fetch(stakeInfo);
       assert.ok(false);
     } catch (error) {
+      // assert.isTrue(error instanceof AnchorError);
+      // const err: AnchorError = error;
+      // console.log("Error message: ", err);
       assert(error);
     }
 

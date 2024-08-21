@@ -11,8 +11,8 @@ use anchor_spl::{
     },
 };
 
-use crate::{Config, CONFIG_SEED};
-const URI: &str = "https://raw.githubusercontent.com/HongThaiPham/solana-bootcamp-autumn-2024/main/week-4/token-2022-staking/app/assets/token-info.json";
+use crate::{Config, CONFIG_SEED, MINT_NAME, MINT_SYMBOL, MINT_URI};
+
 #[derive(Accounts)]
 pub struct Initialize<'info> {
     // account that signs the transaction
@@ -57,22 +57,26 @@ impl<'info> Initialize<'info> {
             ExtensionType::try_calculate_account_len::<Mint>(&[ExtensionType::MetadataPointer])
                 .unwrap();
 
-        // define the metadata of the token to be created (for simplicity, i hardcode the metadata)
+        // define the metadata of the token to be created (for simplicity, i hardcode the metadata and empty additional_metadata)
         let metadata = TokenMetadata {
             update_authority:
                 anchor_spl::token_interface::spl_pod::optional_keys::OptionalNonZeroPubkey(
                     self.config.to_account_info().key(),
                 ),
             mint: self.mint.to_account_info().key(),
-            name: "Solana Bootcamp Autumn 2024".to_string(),
-            symbol: "SBA".to_string(),
-            uri: URI.to_string(),
+            name: MINT_NAME.to_string(),
+            symbol: MINT_SYMBOL.to_string(),
+            uri: MINT_URI.to_string(),
             additional_metadata: vec![],
         };
 
+        // calculate the extra space needed for the metadata by Type-length-value of the metadata
         let extension_extra_space = metadata.tlv_size_of().unwrap();
+
+        // calculate the minimum balance needed for the account
         let lamports = self.rent.minimum_balance(size + extension_extra_space);
 
+        // call cpi to create the account with owner as token 2022 program
         system_program::create_account(
             CpiContext::new(
                 self.system_program.to_account_info(),
@@ -86,6 +90,8 @@ impl<'info> Initialize<'info> {
             &spl_token_2022::ID,
         )?;
 
+        // call cpi to initialize the metadata pointer point to the mint itself
+
         token_2022_extensions::metadata_pointer_initialize(
             CpiContext::new(
                 self.token_program.to_account_info(),
@@ -97,6 +103,8 @@ impl<'info> Initialize<'info> {
             Some(self.config.to_account_info().key()),
             Some(self.mint.to_account_info().key()),
         )?;
+
+        // call the cpi to initialize the mint with authority as the config account
 
         initialize_mint2(
             CpiContext::new(
@@ -110,6 +118,8 @@ impl<'info> Initialize<'info> {
             None,
         )?;
 
+        // call the cpi to initialize the token metadata with the metadata defined above
+
         token_2022_extensions::token_metadata_initialize(
             CpiContext::new_with_signer(
                 self.token_program.to_account_info(),
@@ -122,9 +132,9 @@ impl<'info> Initialize<'info> {
                 },
                 signer_seeds,
             ),
-            "Summer Bootcamp".to_string(),
-            "SBC".to_string(),
-            URI.to_string(),
+            MINT_NAME.to_string(),
+            MINT_SYMBOL.to_string(),
+            MINT_URI.to_string(),
         )?;
 
         Ok(())
