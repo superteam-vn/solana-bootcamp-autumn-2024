@@ -14,5 +14,5 @@ If the stake amount becomes zero after a partial unstake, close the stake_info a
 ## Submission
 
 - Begin your work using the code found in the `/week-4/code` folder.
-- Ensure all the assignment code resides in the `/week-4/assignment` directory. The final submission deadline is `29/05/2024`.
-  Once completed, open a GitHub issue in your forked repository titled `Submission for Assignment 4`. Don't forget to include the signatures of your executed transactions run on devnet in the description.
+- Ensure all the assignment code resides in the `/week-4/assignment` directory. The final submission deadline is `29/08/2024`.
+  Once completed, open a GitHub issue in your forked repository titled `Submission for Assignment 4`. Don't forget to include the signatures of your executed transactions run on devnet in the description. Then, enter your submission information into this form https://forms.gle/zwURuWfuSLqEsjyQ6.
