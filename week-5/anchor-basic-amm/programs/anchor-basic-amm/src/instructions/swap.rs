@@ -87,9 +87,9 @@ impl<'info> Swap<'info> {
         self.deposit(x_to_y, amount_in)?;
 
         let amount_in_minus_fees = amount_in
-            .checked_mul(100000_u64.checked_sub(self.config.fee as u64).unwrap())
+            .checked_mul(10000_u64.checked_sub(self.config.fee as u64).unwrap())
             .ok_or(AmmErrorCode::Overflow)?
-            .checked_div(100000_u64)
+            .checked_div(10000_u64)
             .ok_or(AmmErrorCode::Overflow)?;
 
         // dy = Y.dx / (X + dx)
