@@ -81,7 +81,7 @@ impl<'info> Swap<'info> {
     ) -> Result<()> {
         let (x, y) = match x_to_y {
             true => (self.pool_x_ata.amount, self.pool_y_ata.amount),
-            false => (self.pool_x_ata.amount, self.pool_x_ata.amount),
+            false => (self.pool_y_ata.amount, self.pool_x_ata.amount),
         };
 
         self.deposit(x_to_y, amount_in)?;
