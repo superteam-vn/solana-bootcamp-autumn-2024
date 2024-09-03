@@ -1,0 +1,27 @@
+{
+  "type": "module",
+  "name": "blink-transfer-sol",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "nodemon src/server.js",
+    "start": "node src/server.js"
+  },
+  "repository": "https://github.com/superteam-vn/solana-bootcamp-autumn-2024",
+  "author": "Toan Nhu <toanbk21096@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@dotenvx/dotenvx": "^1.6.4",
+    "@godaddy/terminus": "^4.12.1",
+    "@solana/actions": "^1.4.0",
+    "@solana/web3.js": "^1.95.2",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "morgan": "^1.10.0",
+    "prettier": "^3.3.3"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "globals": "^15.8.0",
+    "nodemon": "^3.1.4"
+  }
+}
