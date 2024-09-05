@@ -329,7 +329,7 @@ describe("anchor-basic-amm", () => {
     console.log("Transaction executed. ", tx2);
   });
 
-  it("Should swap susccessfully", async () => {
+  it("Should swap X to Y susccessfully", async () => {
     const amount_in = new anchor.BN(1 * web3.LAMPORTS_PER_SOL);
     const minimum_amount_out = new anchor.BN(1 * web3.LAMPORTS_PER_SOL);
     const tx = await program.methods
@@ -342,6 +342,24 @@ describe("anchor-basic-amm", () => {
         signer: user2.publicKey,
       })
       .signers([user2])
+      .rpc();
+
+    console.log("Transaction executed. ", tx);
+  });
+
+  it("Should swap Y to X susccessfully", async () => {
+    const amount_in = new anchor.BN(1 * web3.LAMPORTS_PER_SOL);
+    const minimum_amount_out = new anchor.BN(0 * web3.LAMPORTS_PER_SOL);
+    const tx = await program.methods
+      .swap(false, amount_in, minimum_amount_out)
+      .accounts({
+        mintX: mintX.publicKey,
+        mintXTokenProgram: TOKEN_2022_PROGRAM_ID,
+        mintY: mintY.publicKey,
+        mintYTokenProgram: TOKEN_2022_PROGRAM_ID,
+        signer: user1.publicKey,
+      })
+      .signers([user1])
       .rpc();
 
     console.log("Transaction executed. ", tx);
